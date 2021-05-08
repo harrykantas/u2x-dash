@@ -1,0 +1,26 @@
+
+version: '2.2'
+
+services:
+  cube:
+    network_mode: "host"
+    restart: always
+    image: cubejs/cube:latest
+    ports:
+      # It's better to use random port binding for 4000/3000 ports
+      # without it you will not able to start multiple projects inside docker
+      - 4000
+      - 3000
+      # 4000 is a port for Cube.js API
+      - 4000:4000
+      # 3000 is a port for Playground web-server
+      - 3000:3000
+    env_file: .env
+    volumes:
+      # If you are going to use own dependencies, for example axios/vault or anything else for getting configuration
+      # - .:/cube/conf
+      - ./cube.js:/cube/conf/cube.js
+      - ./schema:/cube/conf/schema
+      - ../frontend/build:/cube/frontend/build
+    # Remove this line for production, dev-server must be used only during development
+    # entrypoint: cubejs dev-server
